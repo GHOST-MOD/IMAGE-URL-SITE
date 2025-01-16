@@ -1,0 +1,169 @@
+<html>
+<head>
+    <title>Image Upload and URL Fetcher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0f0c29; /* Neon background color */
+            background-image: linear-gradient(315deg, #0f0c29 0%, #302b63 74%, #24243e 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            width: 300px;
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000) 1;
+            animation: neon-border 5s infinite;
+        }
+        @keyframes neon-border {
+            0% {
+                border-image: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000) 1;
+            }
+            25% {
+                border-image: linear-gradient(45deg, #00ff00, #0000ff, #ff0000, #00ff00) 1;
+            }
+            50% {
+                border-image: linear-gradient(45deg, #0000ff, #ff0000, #00ff00, #0000ff) 1;
+            }
+            75% {
+                border-image: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000) 1;
+            }
+            100% {
+                border-image: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000) 1;
+            }
+        }
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff; /* White text */
+        }
+        .container input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        .container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .container button:hover {
+            background-color: #0056b3;
+        }
+        .container img {
+            margin-top: 20px;
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .container input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ff0000; /* Red text for URL */
+        }
+        .about-icon {
+            margin-top: 20px;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .about-text {
+            display: none;
+            margin-top: 20px;
+            color: #fff;
+            font-size: 18px;
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000) 1;
+            animation: neon-border 5s infinite;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .whatsapp-icon {
+            margin-top: 20px;
+            color: #25D366;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Upload and URL Fetcher</h1>
+        <input type="file" id="imageUpload" accept="image/*">
+        <button onclick="uploadImage()">Upload Image</button>
+        <img id="uploadedImage" src="" alt="Uploaded image will appear here">
+        <input type="text" id="imageUrl" placeholder="Image URL will appear here" readonly>
+        <div class="about-icon">
+            <i class="fas fa-info-circle" onclick="showAbout()"></i>
+        </div>
+        <div class="about-text" id="aboutText">
+            CODE BY CYBER DEXTER
+        </div>
+        <div class="whatsapp-icon">
+            <i class="fab fa-whatsapp" onclick="openWhatsApp()"></i>
+        </div>
+    </div>
+
+    <script>
+        function uploadImage() {
+            const fileInput = document.getElementById('imageUpload');
+            const uploadedImage = document.getElementById('uploadedImage');
+            const imageUrlInput = document.getElementById('imageUrl');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const formData = new FormData();
+                formData.append('image', fileInput.files[0]);
+
+                fetch('https://api.imgbb.com/1/upload?key=8eeb6affb4b9be39999b34180602d850', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    uploadedImage.src = data.data.url;
+                    uploadedImage.alt = "Uploaded image";
+                    imageUrlInput.value = data.data.url;
+                    window.open(data.data.url, '_blank');
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                });
+            }
+        }
+
+        function showAbout() {
+            const aboutText = document.getElementById('aboutText');
+            aboutText.style.display = 'block';
+        }
+
+        function openWhatsApp() {
+            const phoneNumber = '+94785274495';
+            const whatsappUrl = `https://wa.me/${phoneNumber}`;
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
